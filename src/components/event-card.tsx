@@ -1,24 +1,31 @@
 import {
+  Badge,
   Box,
+  Button,
   Card,
   CardBody,
-  CardHeader,
   Flex,
   Heading,
   IconButton,
+  Menu,
+  MenuButton,
+  MenuItem,
+  MenuList,
+  SlideFade,
   Spacer,
-  Stack,
-  StackDivider,
   Text,
+  useDisclosure,
 } from "@chakra-ui/react";
 import { Event } from "../types";
-import { SmallCloseIcon, EditIcon } from "@chakra-ui/icons";
+import { HamburgerIcon } from "@chakra-ui/icons";
 import { useDeleteEventMutation } from "../api";
 import { formatDateToYYYYMMDD, formatTimeToHHMM } from "../utils/dates";
 import { useAppDispatch } from "../redux/hooks";
 import { onOpenDrawer, setSelectedEvent } from "../redux/event-slice";
 
 export const EventCard = ({ title, notes, start, user_id, id }: Event) => {
+  const { isOpen: isVisible } = useDisclosure({ isOpen: true });
+
   const date = formatDateToYYYYMMDD(start);
   const time = formatTimeToHHMM(start);
 
@@ -32,41 +39,46 @@ export const EventCard = ({ title, notes, start, user_id, id }: Event) => {
   };
 
   return (
-    <Card>
-      <CardHeader p={2}>
-        <Flex>
-          <Heading size="md">{title}</Heading>
-          <Spacer />
-          <IconButton
-            aria-label="Edit Event"
-            icon={<EditIcon />}
-            onClick={() => handleEditSelection(id)}
-          />
-          <IconButton
-            aria-label="Remove Event"
-            icon={<SmallCloseIcon color="red.300" />}
-            onClick={() => deleteEvent(id)}
-          />
-        </Flex>
-      </CardHeader>
+    <SlideFade in={isVisible}>
+      <Card mb={"3rem"}>
+        <CardBody>
+          <Badge
+            fontSize="0.8rem"
+            color={"teal.600"}
+            variant={"outline"}
+          >{`${date} - ${time}`}</Badge>
 
-      <CardBody p={0}>
-        <Stack divider={<StackDivider />} spacing="2">
-          <Box>
-            <Heading size="xs" textTransform="uppercase">
-              {notes}
+          <Flex>
+            <Heading as="h3" size="md" my="1rem">
+              {title}
             </Heading>
-            <Text pt="1" fontSize="sm">
-              {`${date} - ${time}`}
-            </Text>
-          </Box>
+            <Spacer />
+            <MenuCard>
+              <MenuItem onClick={() => handleEditSelection(id)}>Edit</MenuItem>
+              <MenuItem onClick={() => deleteEvent(id)}>Delete</MenuItem>
+            </MenuCard>
+          </Flex>
           <Box>
-            <Heading size="xs" textTransform="uppercase">
-              {user_id.name}
-            </Heading>
+            <Text>{notes}</Text>
           </Box>
-        </Stack>
-      </CardBody>
-    </Card>
+          <Flex mt={"2rem"} alignItems="center">
+            <Text fontSize="sm">Hosted by {user_id.name}</Text>
+            <Spacer />
+
+            <Button colorScheme="teal">Assist</Button>
+          </Flex>
+        </CardBody>
+      </Card>
+    </SlideFade>
+  );
+};
+
+const MenuCard = ({ children }: { children: React.ReactNode }) => {
+  return (
+    <Menu>
+      <MenuButton as={IconButton} icon={<HamburgerIcon />} />
+
+      <MenuList>{children}</MenuList>
+    </Menu>
   );
 };

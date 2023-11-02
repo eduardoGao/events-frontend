@@ -40,7 +40,7 @@ export const AppRouter = () => {
         <>
           <Route path="/" element={<MainLayout />} errorElement={<ErrorPage />}>
             <Route path="/" element={<App />} index />
-            <Route path="/event" element={<Event />} />
+            <Route path="/my-events" element={<Event />} />
           </Route>
           <Route path="/*" element={<Navigate to="/" />} />
         </>

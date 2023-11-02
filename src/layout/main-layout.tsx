@@ -33,9 +33,9 @@ export const MainLayout = () => {
           </Wrap>
         </Box>
       </Flex>
-      {/* <Container> */}
-      <Outlet />
-      {/* </Container> */}
+      <Container>
+        <Outlet />
+      </Container>
     </>
   );
 };

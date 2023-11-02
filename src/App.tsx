@@ -26,13 +26,10 @@ function App() {
       <Flex height="80px" align={"center"} justifyContent={"space-between"}>
         <Center h="100%">
           <Heading as="h1" size="2xl">
-            Events
+            Upcoming Events
           </Heading>
         </Center>
 
-        {/* <LinkRouter to="/event">
-          <Button>New Event</Button>
-        </LinkRouter> */}
         <EventDrawer
           isOpen={isOpenDrawer}
           onClose={handleCloseDrawer}
