@@ -6,7 +6,7 @@ export const LinkRouter = ({
   children,
 }: {
   to: string;
-  children: string;
+  children: string | React.ReactNode;
 }) => {
   return (
     <Link as={RouterLink} to={to}>

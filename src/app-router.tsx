@@ -12,6 +12,7 @@ import { ErrorPage } from "./error-page";
 import { useRenewLoginQuery } from "./api";
 import { MainLayout } from "./layout/main-layout";
 import { useUserStore } from "./hooks/use-user-store";
+import { Event } from "./views/event";
 
 export const AppRouter = () => {
   const token = localStorage.getItem("token");
@@ -39,6 +40,7 @@ export const AppRouter = () => {
         <>
           <Route path="/" element={<MainLayout />} errorElement={<ErrorPage />}>
             <Route path="/" element={<App />} index />
+            <Route path="/event" element={<Event />} />
           </Route>
           <Route path="/*" element={<Navigate to="/" />} />
         </>
