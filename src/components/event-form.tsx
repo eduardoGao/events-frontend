@@ -1,46 +1,16 @@
-import { ArrowBackIcon } from "@chakra-ui/icons";
+import { useState, useEffect } from "react";
 import {
-  Button,
-  Center,
   FormControl,
-  FormHelperText,
   FormLabel,
-  Heading,
-  IconButton,
   Input,
+  FormHelperText,
   Wrap,
   WrapItem,
+  Button,
 } from "@chakra-ui/react";
-import { LinkRouter } from "../components/LinkRouter";
-import { useEffect, useState } from "react";
 import { usePostEventMutation, useUpdateEventMutation } from "../api";
-import { addHours, getCombineDateTime } from "../utils/dates";
 import { useEventStore } from "../hooks/use-event-store";
-
-export const Event = () => {
-  return (
-    <div>
-      <Wrap>
-        <WrapItem>
-          <Center h="100%">
-            <LinkRouter to="/">
-              <IconButton
-                aria-label="Back to all events"
-                icon={<ArrowBackIcon />}
-              />
-            </LinkRouter>
-          </Center>
-        </WrapItem>
-        <WrapItem>
-          <Center>
-            <Heading as="h3">New Event</Heading>
-          </Center>
-        </WrapItem>
-      </Wrap>
-      <EventForm />
-    </div>
-  );
-};
+import { getCombineDateTime, addHours } from "../utils/dates";
 
 type EventCreation = {
   id: string | null;

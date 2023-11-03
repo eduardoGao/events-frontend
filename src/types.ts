@@ -5,15 +5,18 @@ export type User = {
 };
 
 export type Event = {
+  id: string;
   title: string;
   notes: string;
   start: Date;
-  end: Date;
   user_id: {
     _id: string;
     name: string;
   };
-  id: string;
+  assistants: {
+    _id: string;
+    name: string;
+  }[];
 };
 
 export type Events = {

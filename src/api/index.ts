@@ -1,6 +1,11 @@
 import { createApi, fetchBaseQuery } from "@reduxjs/toolkit/query/react";
 import { Event, Events, User } from "../types";
 
+type Assistance = {
+  id: string;
+  assistance: string;
+};
+
 export const api = createApi({
   reducerPath: "api",
   baseQuery: fetchBaseQuery({
@@ -14,7 +19,7 @@ export const api = createApi({
       return headers;
     },
   }),
-  tagTypes: ["Events"],
+  tagTypes: ["Events", "EventsByUser"],
   endpoints: (builder) => ({
     login: builder.mutation({
       query: ({ email, password }: { email: string; password: string }) => ({
@@ -28,7 +33,13 @@ export const api = createApi({
     }),
     getEvents: builder.query<Events, undefined>({
       query: () => "/events",
+      keepUnusedDataFor: 60 * 4,
       providesTags: [{ type: "Events" }],
+    }),
+    getEventsByUser: builder.query<Events, undefined>({
+      query: () => "/events/by-user",
+      keepUnusedDataFor: 60 * 4,
+      providesTags: [{ type: "EventsByUser" }],
     }),
     postEvent: builder.mutation({
       query: (payload) => ({
@@ -54,7 +65,30 @@ export const api = createApi({
         url: `/events/${id}`,
         method: "DELETE",
       }),
-      // invalidatesTags: (result, error, id) => [{ type: "Events", id }],
+      invalidatesTags: [{ type: "Events" }],
+    }),
+    addAttendance: builder.mutation({
+      query: (payload: { id: string; assistant: string }) => {
+        const { id, assistant } = payload;
+
+        return {
+          url: `/events/${id}/add-assistant`,
+          method: "PATCH",
+          body: { assistant },
+        };
+      },
+      invalidatesTags: [{ type: "Events" }],
+    }),
+    removeAttendance: builder.mutation({
+      query: (payload: { id: string; assistant: string }) => {
+        const { id, assistant } = payload;
+
+        return {
+          url: `/events/${id}/remove-assistant`,
+          method: "PATCH",
+          body: { assistant },
+        };
+      },
       invalidatesTags: [{ type: "Events" }],
     }),
   }),
@@ -67,4 +101,7 @@ export const {
   usePostEventMutation,
   useDeleteEventMutation,
   useUpdateEventMutation,
+  useGetEventsByUserQuery,
+  useAddAttendanceMutation,
+  useRemoveAttendanceMutation,
 } = api;

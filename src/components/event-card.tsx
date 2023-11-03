@@ -17,13 +17,29 @@ import {
   useDisclosure,
 } from "@chakra-ui/react";
 import { Event } from "../types";
-import { HamburgerIcon } from "@chakra-ui/icons";
-import { useDeleteEventMutation } from "../api";
+import { CheckCircleIcon, HamburgerIcon } from "@chakra-ui/icons";
+import {
+  useAddAttendanceMutation,
+  useDeleteEventMutation,
+  useRemoveAttendanceMutation,
+} from "../api";
 import { formatDateToYYYYMMDD, formatTimeToHHMM } from "../utils/dates";
 import { useAppDispatch } from "../redux/hooks";
 import { onOpenDrawer, setSelectedEvent } from "../redux/event-slice";
 
-export const EventCard = ({ title, notes, start, user_id, id }: Event) => {
+type EventCard = Event & {
+  isPublicVersion: boolean;
+};
+
+export const EventCard = ({
+  title,
+  notes,
+  start,
+  user_id,
+  id,
+  assistants,
+  isPublicVersion = true,
+}: EventCard) => {
   const { isOpen: isVisible } = useDisclosure({ isOpen: true });
 
   const date = formatDateToYYYYMMDD(start);
@@ -36,6 +52,17 @@ export const EventCard = ({ title, notes, start, user_id, id }: Event) => {
   const handleEditSelection = (id: string) => {
     dispatch(setSelectedEvent(id));
     dispatch(onOpenDrawer());
+  };
+
+  const isUserAttending = assistants?.some((item) => item._id === user_id._id);
+  const [addAttendance] = useAddAttendanceMutation();
+  const handleAttendance = () => {
+    addAttendance({ id, assistant: user_id._id });
+  };
+
+  const [removeAttendance] = useRemoveAttendanceMutation();
+  const handleRemoveAttendance = () => {
+    removeAttendance({ id, assistant: user_id._id });
   };
 
   return (
@@ -53,10 +80,14 @@ export const EventCard = ({ title, notes, start, user_id, id }: Event) => {
               {title}
             </Heading>
             <Spacer />
-            <MenuCard>
-              <MenuItem onClick={() => handleEditSelection(id)}>Edit</MenuItem>
-              <MenuItem onClick={() => deleteEvent(id)}>Delete</MenuItem>
-            </MenuCard>
+            {isPublicVersion && (
+              <MenuCard>
+                <MenuItem onClick={() => handleEditSelection(id)}>
+                  Edit
+                </MenuItem>
+                <MenuItem onClick={() => deleteEvent(id)}>Delete</MenuItem>
+              </MenuCard>
+            )}
           </Flex>
           <Box>
             <Text>{notes}</Text>
@@ -64,8 +95,17 @@ export const EventCard = ({ title, notes, start, user_id, id }: Event) => {
           <Flex mt={"2rem"} alignItems="center">
             <Text fontSize="sm">Hosted by {user_id.name}</Text>
             <Spacer />
-
-            <Button colorScheme="teal">Assist</Button>
+            {isUserAttending ? (
+              <CheckCircleIcon
+                cursor="pointer"
+                color="teal"
+                onClick={handleRemoveAttendance}
+              />
+            ) : (
+              <Button colorScheme="teal" size="xs" onClick={handleAttendance}>
+                Attend
+              </Button>
+            )}
           </Flex>
         </CardBody>
       </Card>

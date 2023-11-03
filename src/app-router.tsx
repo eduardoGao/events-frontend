@@ -6,13 +6,13 @@ import {
   createBrowserRouter,
   createRoutesFromElements,
 } from "react-router-dom";
-import App from "./App";
+import { MyEvents } from "./views/my-events";
 import { Login } from "./views/login";
 import { ErrorPage } from "./error-page";
 import { useRenewLoginQuery } from "./api";
 import { MainLayout } from "./layout/main-layout";
 import { useUserStore } from "./hooks/use-user-store";
-import { Event } from "./views/event";
+import { Events } from "./views/events";
 
 export const AppRouter = () => {
   const token = localStorage.getItem("token");
@@ -39,8 +39,8 @@ export const AppRouter = () => {
       ) : (
         <>
           <Route path="/" element={<MainLayout />} errorElement={<ErrorPage />}>
-            <Route path="/" element={<App />} index />
-            <Route path="/my-events" element={<Event />} />
+            <Route path="/" element={<Events />} index />
+            <Route path="/my-events" element={<MyEvents />} />
           </Route>
           <Route path="/*" element={<Navigate to="/" />} />
         </>

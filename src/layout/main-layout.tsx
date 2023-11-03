@@ -10,6 +10,7 @@ import {
 } from "@chakra-ui/react";
 import { Outlet } from "react-router-dom";
 import { useUserStore } from "../hooks/use-user-store";
+import { LinkRouter } from "../components/LinkRouter";
 
 export const MainLayout = () => {
   const { user, handleLogout } = useUserStore();
@@ -18,20 +19,24 @@ export const MainLayout = () => {
     <>
       <Flex p="4" bg="green.400">
         <Spacer />
-        <Box>
-          <Wrap>
-            <WrapItem>
-              <Center maxW="100px" h="100%" bg="green.200">
-                {user}
-              </Center>
-            </WrapItem>
-            <WrapItem>
-              <Button variant="solid" colorScheme="teal" onClick={handleLogout}>
-                Logout
-              </Button>
-            </WrapItem>
-          </Wrap>
-        </Box>
+
+        <Wrap>
+          <WrapItem>
+            <Center h="100%" bg="green.200">
+              <LinkRouter to="my-events">Go to my Events</LinkRouter>
+            </Center>
+          </WrapItem>
+          <WrapItem>
+            <Center maxW="100px" h="100%" bg="green.200">
+              {user}
+            </Center>
+          </WrapItem>
+          <WrapItem>
+            <Button variant="solid" colorScheme="teal" onClick={handleLogout}>
+              Logout
+            </Button>
+          </WrapItem>
+        </Wrap>
       </Flex>
       <Container>
         <Outlet />

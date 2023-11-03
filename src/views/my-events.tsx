@@ -9,26 +9,46 @@ import {
   DrawerOverlay,
   Flex,
   Heading,
+  IconButton,
+  Wrap,
+  WrapItem,
 } from "@chakra-ui/react";
-import { useGetEventsQuery } from "./api";
+import { useGetEventsByUserQuery } from "../api";
 import { useRef } from "react";
-import { EventForm } from "./views/event";
-import { EventCard } from "./components/event-card";
-import { useEventStore } from "./hooks/use-event-store";
 
-function App() {
-  const { data, isSuccess } = useGetEventsQuery(undefined);
+import { EventCard } from "../components/event-card";
+import { useEventStore } from "../hooks/use-event-store";
+import { EventForm } from "../components/event-form";
+import { ArrowBackIcon } from "@chakra-ui/icons";
+import { LinkRouter } from "../components/LinkRouter";
+
+export function MyEvents() {
+  const { data, isSuccess } = useGetEventsByUserQuery(undefined);
 
   const { isOpenDrawer, handleCloseDrawer, handleOpenDrawer } = useEventStore();
 
   return (
     <>
       <Flex height="80px" align={"center"} justifyContent={"space-between"}>
-        <Center h="100%">
-          <Heading as="h1" size="2xl">
-            Upcoming Events
-          </Heading>
-        </Center>
+        <Wrap>
+          <WrapItem>
+            <Center h="100%">
+              <LinkRouter to="/">
+                <IconButton
+                  aria-label="Back to all events"
+                  icon={<ArrowBackIcon />}
+                />
+              </LinkRouter>
+            </Center>
+          </WrapItem>
+          <WrapItem>
+            <Center h="100%">
+              <Heading as="h1" size="2xl">
+                My Events
+              </Heading>
+            </Center>
+          </WrapItem>
+        </Wrap>
 
         <EventDrawer
           isOpen={isOpenDrawer}
@@ -38,12 +58,12 @@ function App() {
       </Flex>
       {isSuccess &&
         data.events.length > 0 &&
-        data.events.map((event) => <EventCard key={event.id} {...event} />)}
+        data.events.map((event) => (
+          <EventCard key={event.id} {...event} isPublicVersion />
+        ))}
     </>
   );
 }
-
-export default App;
 
 function EventDrawer({
   isOpen,
