@@ -67,13 +67,12 @@ export const EventCard = ({
 
   return (
     <SlideFade in={isVisible}>
-      <Card mb={"3rem"}>
+      <Card boxShadow="outline" bg="gray.800" color="gray.50">
         <CardBody>
           <Badge
             fontSize="0.8rem"
-            color={"teal.600"}
-            variant={"outline"}
-          >{`${date} - ${time}`}</Badge>
+            colorScheme="purple"
+          >{`${date} | ${time}`}</Badge>
 
           <Flex>
             <Heading as="h3" size="md" my="1rem">
@@ -82,43 +81,53 @@ export const EventCard = ({
             <Spacer />
             {isPublicVersion && (
               <MenuCard>
-                <MenuItem onClick={() => handleEditSelection(id)}>
+                <MenuItem bg="inherit" onClick={() => handleEditSelection(id)}>
                   Edit
                 </MenuItem>
-                <MenuItem onClick={() => deleteEvent(id)}>Delete</MenuItem>
+                <MenuItem bg="inherit" onClick={() => deleteEvent(id)}>
+                  Delete
+                </MenuItem>
               </MenuCard>
             )}
           </Flex>
           <Box>
             <Text>{notes}</Text>
           </Box>
-          <Flex mt={"2rem"} alignItems="center">
-            <Text fontSize="sm">Hosted by {user_id.name}</Text>
-            <Spacer />
-            {isUserAttending ? (
-              <CheckCircleIcon
-                cursor="pointer"
-                color="teal"
-                onClick={handleRemoveAttendance}
-              />
-            ) : (
-              <Button colorScheme="teal" size="xs" onClick={handleAttendance}>
-                Attend
-              </Button>
-            )}
-          </Flex>
+          {!isPublicVersion && (
+            <Flex mt={"2rem"} alignItems="center">
+              <Text fontSize="sm">Hosted by {user_id.name}</Text>
+              <Spacer />
+
+              {isUserAttending ? (
+                <CheckCircleIcon
+                  cursor="pointer"
+                  color="purple.500"
+                  onClick={handleRemoveAttendance}
+                />
+              ) : (
+                <Button size="xs" onClick={handleAttendance}>
+                  Attend
+                </Button>
+              )}
+            </Flex>
+          )}
         </CardBody>
       </Card>
     </SlideFade>
   );
 };
 
-const MenuCard = ({ children }: { children: React.ReactNode }) => {
+export const MenuCard = ({ children }: { children: React.ReactNode }) => {
   return (
     <Menu>
-      <MenuButton as={IconButton} icon={<HamburgerIcon />} />
+      <MenuButton
+        as={IconButton}
+        icon={<HamburgerIcon />}
+        bg={"none"}
+        _hover={{ bg: "gray.700" }}
+      />
 
-      <MenuList>{children}</MenuList>
+      <MenuList bg="gray.700">{children}</MenuList>
     </Menu>
   );
 };

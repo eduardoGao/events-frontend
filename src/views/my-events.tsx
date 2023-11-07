@@ -37,6 +37,8 @@ export function MyEvents() {
                 <IconButton
                   aria-label="Back to all events"
                   icon={<ArrowBackIcon />}
+                  bg="transparent"
+                  _hover={{ bg: "gray.800" }}
                 />
               </LinkRouter>
             </Center>
@@ -80,7 +82,7 @@ function EventDrawer({
 
   return (
     <>
-      <Button ref={btnRef} colorScheme="teal" onClick={onOpen}>
+      <Button ref={btnRef} onClick={onOpen}>
         Create Event
       </Button>
       <Drawer
@@ -92,11 +94,11 @@ function EventDrawer({
         <DrawerOverlay />
         <DrawerContent>
           <DrawerCloseButton />
-          <DrawerHeader>
+          <DrawerHeader bg="gray.700">
             {isEditingEvent ? "Edit Event" : "Create a new event"}
           </DrawerHeader>
 
-          <DrawerBody>
+          <DrawerBody bg="gray.700">
             <EventForm />
           </DrawerBody>
 

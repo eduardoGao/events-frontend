@@ -1,4 +1,4 @@
-import { Heading } from "@chakra-ui/react";
+import { Heading, SimpleGrid } from "@chakra-ui/react";
 import { useGetEventsQuery } from "../api";
 import { EventCard } from "../components/event-card";
 
@@ -7,12 +7,16 @@ export const Events = () => {
 
   return (
     <div>
-      <Heading as="h3">All Events</Heading>
-      {isSuccess &&
-        data.events.length > 0 &&
-        data.events.map((event) => (
-          <EventCard key={event.id} {...event} isPublicVersion={false} />
-        ))}
+      <Heading as="h3" mb={4}>
+        Upcoming Events
+      </Heading>
+      {isSuccess && data.events.length > 0 && (
+        <SimpleGrid minChildWidth={"320px"} spacing={8}>
+          {data.events.map((event) => (
+            <EventCard key={event.id} {...event} isPublicVersion={false} />
+          ))}
+        </SimpleGrid>
+      )}
     </div>
   );
 };
