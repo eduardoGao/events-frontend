@@ -13,6 +13,7 @@ import { useRenewLoginQuery } from "./api";
 import { MainLayout } from "./layout/main-layout";
 import { useUserStore } from "./hooks/use-user-store";
 import { Events } from "./views/events";
+import { Home } from "./views/home";
 
 export const AppRouter = () => {
   const token = localStorage.getItem("token");
@@ -31,20 +32,23 @@ export const AppRouter = () => {
 
   const routerJSX = createBrowserRouter(
     createRoutesFromElements(
-      authStatus === "not-auth" ? (
-        <>
-          <Route path="/login" element={<Login />} />
-          <Route path="/*" element={<Navigate to="/login" />} />
-        </>
-      ) : (
-        <>
-          <Route path="/" element={<MainLayout />} errorElement={<ErrorPage />}>
+      <Route path="/" element={<MainLayout />} errorElement={<ErrorPage />}>
+        {authStatus === "not-auth" ? (
+          <>
+            <Route path="/" element={<Home />} index />
+            <Route path="/login" element={<Login />} />
+            {/* <Route path="/" element={<Navigate to="/login" />} /> */}
+            <Route path="/*" element={<Navigate to="/login" />} />
+          </>
+        ) : (
+          <>
             <Route path="/" element={<Events />} index />
             <Route path="/my-events" element={<MyEvents />} />
-          </Route>
-          <Route path="/*" element={<Navigate to="/" />} />
-        </>
-      )
+
+            <Route path="/*" element={<Navigate to="/" />} />
+          </>
+        )}
+      </Route>
     )
   );
 

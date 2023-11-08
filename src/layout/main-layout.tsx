@@ -32,69 +32,72 @@ export const MainLayout = () => {
 const Header = () => {
   const { user, handleLogout } = useUserStore();
 
-  const { colorMode, toggleColorMode } = useColorMode();
-
   const [isLargeScreen] = useMediaQuery("(min-width: 525px)", { ssr: false });
 
   return (
     <Flex height={16} p="4" justifyContent="space-between" alignItems="center">
-      <span>Logo</span>
+      <LinkRouter to="/">Logo</LinkRouter>
 
-      <HStack spacing={8}>
-        {/* <Button onClick={toggleColorMode}>
-          Toggle {colorMode === "light" ? "Dark" : "Light"}
-        </Button> */}
-        {!isLargeScreen ? (
-          <Menu>
-            <MenuButton
-              bgColor="transparent"
-              as={IconButton}
-              icon={<Avatar size="sm" />}
-            />
-            <MenuList>
-              <MenuItem>{user}</MenuItem>
-              <MenuItem>
-                <LinkRouter to="my-events">Go to my Events</LinkRouter>
-              </MenuItem>
-
-              <MenuGroup>
-                <Button
-                  variant="ghost"
-                  w={"100%"}
-                  colorScheme="orange"
-                  onClick={handleLogout}
-                >
-                  Logout
-                </Button>
-              </MenuGroup>
-            </MenuList>
-          </Menu>
-        ) : (
-          <>
-            <LinkRouter to="my-events">Go to my Events</LinkRouter>
-            <span>{user}</span>
-
+      {user ? (
+        <HStack spacing={8}>
+          {!isLargeScreen ? (
             <Menu>
               <MenuButton
                 bgColor="transparent"
                 as={IconButton}
                 icon={<Avatar size="sm" />}
               />
-              <MenuList p={0}>
-                <Button
-                  variant="outline"
-                  w={"100%"}
-                  // color="red.400"
-                  borderColor="purple.500"
-                  onClick={handleLogout}
-                >
-                  Logout
-                </Button>
+              <MenuList>
+                <MenuItem>{user}</MenuItem>
+                <MenuItem>
+                  <LinkRouter to="my-events">Go to my Events</LinkRouter>
+                </MenuItem>
+
+                <MenuGroup>
+                  <Button
+                    variant="ghost"
+                    w={"100%"}
+                    colorScheme="orange"
+                    onClick={handleLogout}
+                  >
+                    Logout
+                  </Button>
+                </MenuGroup>
               </MenuList>
             </Menu>
-          </>
-        )}
-      </HStack>
+          ) : (
+            <>
+              <LinkRouter to="my-events">Go to my Events</LinkRouter>
+              <span>{user}</span>
+
+              <Menu>
+                <MenuButton
+                  bgColor="transparent"
+                  as={IconButton}
+                  icon={<Avatar size="sm" />}
+                />
+                <MenuList p={0}>
+                  <Button
+                    variant="outline"
+                    w={"100%"}
+                    // color="red.400"
+                    borderColor="purple.500"
+                    onClick={handleLogout}
+                  >
+                    Logout
+                  </Button>
+                </MenuList>
+              </Menu>
+            </>
+          )}
+        </HStack>
+      ) : (
+        <LinkRouter to="login">
+          <Button variant="link" color="purple.300">
+            Login
+          </Button>
+        </LinkRouter>
+      )}
     </Flex>
   );
 };
