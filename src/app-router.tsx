@@ -14,6 +14,7 @@ import { MainLayout } from "./layout/main-layout";
 import { useUserStore } from "./hooks/use-user-store";
 import { Events } from "./views/events";
 import { Home } from "./views/home";
+import { SavedEvents } from "./views/saved-events";
 
 export const AppRouter = () => {
   const token = localStorage.getItem("token");
@@ -44,6 +45,7 @@ export const AppRouter = () => {
           <>
             <Route path="/" element={<Events />} index />
             <Route path="/my-events" element={<MyEvents />} />
+            <Route path="/saved-events" element={<SavedEvents />} />
 
             <Route path="/*" element={<Navigate to="/" />} />
           </>

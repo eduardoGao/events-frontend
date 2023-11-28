@@ -26,6 +26,7 @@ import {
 import { formatDateToYYYYMMDD, formatTimeToHHMM } from "../utils/dates";
 import { useAppDispatch } from "../redux/hooks";
 import { onOpenDrawer, setSelectedEvent } from "../redux/event-slice";
+import { useUserStore } from "../hooks/use-user-store";
 
 type EventCard = Event & {
   isPublicVersion: boolean;
@@ -40,6 +41,7 @@ export const EventCard = ({
   assistants,
   isPublicVersion = true,
 }: EventCard) => {
+  const { uid } = useUserStore();
   const { isOpen: isVisible } = useDisclosure({ isOpen: true });
 
   const date = formatDateToYYYYMMDD(start);
@@ -54,15 +56,15 @@ export const EventCard = ({
     dispatch(onOpenDrawer());
   };
 
-  const isUserAttending = assistants?.some((item) => item._id === user_id._id);
+  const isUserAttending = assistants?.some((item) => item._id === uid);
   const [addAttendance] = useAddAttendanceMutation();
   const handleAttendance = () => {
-    addAttendance({ id, assistant: user_id._id });
+    addAttendance({ id, assistant: uid! });
   };
 
   const [removeAttendance] = useRemoveAttendanceMutation();
   const handleRemoveAttendance = () => {
-    removeAttendance({ id, assistant: user_id._id });
+    removeAttendance({ id, assistant: uid! });
   };
 
   return (
@@ -93,7 +95,7 @@ export const EventCard = ({
           <Box>
             <Text>{notes}</Text>
           </Box>
-          {!isPublicVersion && (
+          {!isPublicVersion ? (
             <Flex mt={"2rem"} alignItems="center">
               <Text fontSize="sm">Hosted by {user_id.name}</Text>
               <Spacer />
@@ -110,6 +112,13 @@ export const EventCard = ({
                 </Button>
               )}
             </Flex>
+          ) : (
+            <Box>
+              <Text>Assistants:</Text>
+              {assistants.map((item) => (
+                <Text key={item._id}>{item.name}</Text>
+              ))}
+            </Box>
           )}
         </CardBody>
       </Card>
